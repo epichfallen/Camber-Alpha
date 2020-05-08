@@ -39,3 +39,9 @@ def vec_add( vec1, vec2):
     vec3=vec(vec3mag,radian_to_degrees(vec3angle))
     return vec3
 
+def boat_to_compass(boat_heading,twa):
+    tw_bearing=boat_heading+twa
+    if tw_bearing>=360:
+        return tw_bearing%360
+    else:
+        return tw_bearing
