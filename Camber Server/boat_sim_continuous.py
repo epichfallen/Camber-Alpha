@@ -51,8 +51,9 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 while True:
     aw = vec(realistic_aws(),random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
+    aw.mag=aawm
     bs = boat_speed(aawm)
-    COG = vec(bs, 150)
+    COG = vec(bs, 180)
     
     tw = vec_add(aw,COG)
     sleep(0.15)
