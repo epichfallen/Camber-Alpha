@@ -56,7 +56,7 @@ while True:
     
     tw = vec_add(aw,COG)
     sleep(0.15)
-    print("TWS:",round(tw.mag,1),"TWA:",round(tw.angle,1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1), end='\r')
+    print("TWS:",round(tw.mag,1),"TWA:",round(tw.angle,1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
   
     
     
