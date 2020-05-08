@@ -9,6 +9,7 @@ from time import sleep
 import random
 from wa_calc import vec
 from wa_calc import vec_add
+from wa_calc import boat_to_compass
 
 #global variables
 startspeed = 10 #stable wind speed
@@ -49,7 +50,7 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 
 
 while True:
-    aw = vec(realistic_aws(),random.randint(3655,3755)/100)
+    aw = vec(realistic_aws(),-random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
     aw.mag=aawm
     bs = boat_speed(aawm)
@@ -57,7 +58,7 @@ while True:
     
     tw = vec_add(aw,COG)
     sleep(0.15)
-    print("TWS:",round(tw.mag,1),"TWA:",round(tw.angle,1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
+    print("TWS:",round(tw.mag,1),"TWA:",round(tw.angle,1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1),"Tw_bearing",boat_to_compass(0,tw.angle))
   
     
     
