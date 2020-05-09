@@ -87,13 +87,9 @@ while True:
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
     sleep(0.15)
-<<<<<<< HEAD
 
-    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
-=======
-    
     print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(abs(aw.angle),1))
->>>>>>> 63e9f55e21898be8300ca7d58bd20888f29ae117
+
     print("Depth:", realistic_depth(),"Heel:", realistic_heel())
     print("============================================================")
   
