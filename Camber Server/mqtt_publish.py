@@ -1,4 +1,7 @@
-import paho.mqtt.publish as publish
+import paho.mqtt.client as mqtt
+
+client = mqtt.Client()
+client.connect("localhost",1883,60)
 
 #sens for sensor input
 #sim for simulator input
@@ -7,14 +10,18 @@ source="sim"
 global devicename
 devicename = "Raspberry Server"
 
-if source=="sim":
-    import boat_sim as sim
-    publish.single("wind/tws", sim.aw, hostname=devicename) #true wind speed
-    publish.single("wind/twa", sim.twa, hostname=devicename) #true wind angle
-    publish.single("wind/aws", sim.aws, hostname=devicename) #apparent wind speed
-    publish.single("wind/awa", sim.awa, hostname=devicename) #apparent wind angle
-    publish.single("boat/speed", sim.bsr, hostname=devicename) #boat speed
-    publish.single("boat/depth", sim.dpth, hostname=devicename) #depth
-    publish.single("boat/heel", sim.heel, hostname=devicename) #boat heel
+
+while True:
+    if source=="sim":
+        import boat_sim as sim
+
+        client.publish("wind/tws", sim.aw) #true wind speed
+        client.publish("wind/twa", sim.twa) #true wind angle
+        client.publish("wind/aws", sim.aws) #apparent wind speed
+        client.publish("wind/awa", sim.awa) #apparent wind angle
+        client.publish("boat/speed", sim.bsr) #boat speed
+        client.publish("boat/depth", sim.dpth) #depth
+        client.publish("boat/heel", sim.heel) #boat heel
 
 
+client.disconnect()

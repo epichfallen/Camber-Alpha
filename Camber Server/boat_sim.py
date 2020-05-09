@@ -5,9 +5,9 @@ Created on Wed May  6 00:22:15 2020
 @author: piping,epicfallen
 """
 
-from __main__ import *
-from time import sleep
+
 import random
+from time import sleep
 from wa_calc import vec
 from wa_calc import vec_add
 from wa_calc import boat_to_compass
@@ -101,7 +101,7 @@ while True:
 
     print("TWS:",tws,"TWA:",twa,"BS",bsr,"AWS:",aws,"AWA:",awa)
     print("Depth:", dpth,"Heel:", heel)
-    print("============================================================")
+    print("========================================")
   
     
    
