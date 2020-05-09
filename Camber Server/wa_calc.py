@@ -45,3 +45,5 @@ def boat_to_compass(boat_heading,twa):
         return tw_bearing-360
     elif tw_bearing<=0:
         return tw_bearing+360
+    else:
+        return tw_bearing

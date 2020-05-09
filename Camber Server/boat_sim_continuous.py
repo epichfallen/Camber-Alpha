@@ -11,30 +11,58 @@ from wa_calc import vec
 from wa_calc import vec_add
 from wa_calc import boat_to_compass
 
+
 #global variables
 startspeed = 10 #stable wind speed
 tempspeed = startspeed #set the temporary value to start speed
+startdepth = 20 #start depth value
+tempdepth = startdepth #set the temporary value to start depth
+startheel = 20 #start depth value
+tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
 
-def realistic_aws():
+
+def realistic_heading(input):#generate realistic heading data
+    max = input + 1
+    min = input - 1
+    output = random.randint(min,max)
+    return output
+
+
+def realistic_heel(): #generate realistic heel from apparent wind
+    return round((aw.mag**1.5)/2,1)
+    
+
+def realistic_depth():
+    global startdepth
+    global tempdepth
+    min = startdepth - 10 #shallowest
+    max = startdepth + 10 #deepest
+    tempdepth = tempdepth + random.randint(-1,1)/5*random.randint(1,3)
+    if tempdepth >= max:
+        tempdepth = tempdepth - 0.5
+    if tempdepth <= min:
+        tempdepth = tempdepth + 0.5  
+    return round(tempdepth,1)
+
+
+def realistic_aws(): #generate realistic aparent wind speed
     global startspeed
     global tempspeed
-
     min = startspeed - (startspeed/100)*50 #lows
     max = startspeed + (startspeed/100)*80 #gusts
-
     tempspeed = tempspeed + random.randint(-1000,1000)/1000
-
     if tempspeed >= max:
         tempspeed = tempspeed - 0.5
     if tempspeed <= min:
         tempspeed = tempspeed + 0.5   
-    
     return tempspeed
+
 
 def boat_speed(aawm): #boatspeed from average aws
   bs=9.4-9.4*(0.9)**aawm
   return bs
+
 
 def average_aw_mag(aw): #generate average from the last 5 values of aws
     global aw_mag_log
@@ -55,10 +83,13 @@ while True:
     aw.mag=aawm
     bs = boat_speed(aawm)
     COG = vec(bs, 180)
-    
+    heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
-    sleep(0.15)
-    print("TWS:",round(tw.mag,1),"TWA:",round(tw.angle,1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1),"Tw_bearing",boat_to_compass(0,tw.angle))
+    sleep(0)
+    print()
+    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
+    print("Depth:", realistic_depth(),"Heel:", realistic_heel())
+    print("============================================================")
   
     
     
