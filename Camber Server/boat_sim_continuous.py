@@ -30,7 +30,7 @@ def realistic_heading(input):#generate realistic heading data
 
 
 def realistic_heel(): #generate realistic heel from apparent wind
-    return round((aw.mag**1.5)/2,1)
+    return round((aw.mag**1.4)/2,1)
     
 
 def realistic_depth():
@@ -51,7 +51,7 @@ def realistic_aws(): #generate realistic aparent wind speed
     global tempspeed
     min = startspeed - (startspeed/100)*50 #lows
     max = startspeed + (startspeed/100)*80 #gusts
-    tempspeed = tempspeed + random.randint(-1000,1000)/1000
+    tempspeed = tempspeed + random.randint(-1000,1000)/2000
     if tempspeed >= max:
         tempspeed = tempspeed - 0.5
     if tempspeed <= min:
@@ -77,17 +77,23 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
         return tempsum/5           
 
 
+
 while True:
-    aw = vec(realistic_aws(),-random.randint(3655,3755)/100)
+    aw = vec(realistic_aws(),random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
-    aw.mag=aawm
+    #aw.mag=aawm
     bs = boat_speed(aawm)
     COG = vec(bs, 180)
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
     sleep(0.15)
-    
+<<<<<<< HEAD
+
     print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
+=======
+    
+    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(abs(aw.angle),1))
+>>>>>>> 63e9f55e21898be8300ca7d58bd20888f29ae117
     print("Depth:", realistic_depth(),"Heel:", realistic_heel())
     print("============================================================")
   
