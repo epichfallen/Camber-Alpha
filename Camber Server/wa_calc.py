@@ -42,6 +42,6 @@ def vec_add( vec1, vec2):
 def boat_to_compass(boat_heading,twa):
     tw_bearing=boat_heading+twa
     if tw_bearing>=360:
-        return tw_bearing%360
-    else:
-        return tw_bearing
+        return tw_bearing-360
+    elif tw_bearing<=0:
+        return tw_bearing+360
