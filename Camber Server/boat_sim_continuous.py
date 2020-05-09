@@ -40,9 +40,9 @@ def realistic_depth():
     max = startdepth + 10 #deepest
     tempdepth = tempdepth + random.randint(-1,1)/5*random.randint(1,3)
     if tempdepth >= max:
-        tempdepth = tempdepth - 0.5
+        tempdepth = tempdepth - 3
     if tempdepth <= min:
-        tempdepth = tempdepth + 0.5  
+        tempdepth = tempdepth + 3  
     return round(tempdepth,1)
 
 
@@ -53,9 +53,9 @@ def realistic_aws(): #generate realistic aparent wind speed
     max = startspeed + (startspeed/100)*80 #gusts
     tempspeed = tempspeed + random.randint(-1000,1000)/2000
     if tempspeed >= max:
-        tempspeed = tempspeed - 0.5
+        tempspeed = tempspeed - 3
     if tempspeed <= min:
-        tempspeed = tempspeed + 0.5   
+        tempspeed = tempspeed + 3   
     return tempspeed
 
 
