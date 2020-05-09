@@ -85,8 +85,8 @@ while True:
     COG = vec(bs, 180)
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
-    sleep(0)
-    print()
+    sleep(0.15)
+    
     print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
     print("Depth:", realistic_depth(),"Heel:", realistic_heel())
     print("============================================================")
