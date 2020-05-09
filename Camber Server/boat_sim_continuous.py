@@ -80,14 +80,14 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 while True:
     aw = vec(realistic_aws(),-random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
-    aw.mag=aawm
+    #aw.mag=aawm
     bs = boat_speed(aawm)
     COG = vec(bs, 180)
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
     sleep(0.15)
     
-    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(aw.angle,1))
+    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(abs(aw.angle),1))
     print("Depth:", realistic_depth(),"Heel:", realistic_heel())
     print("============================================================")
   
