@@ -24,8 +24,15 @@ tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
 
 class data:
-    def __init__(self,value):
-        self.value=value
+    tws=0
+    twa=0
+    boat_speed=0
+    def __init__(self,tws2,twa2,boat_speed2):
+        self.tws=tws2
+        self.twa=twa2
+        self.boat_speed=boat_speed2
+    
+        
         
 
 
@@ -85,7 +92,7 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 
    
 
-
+mqtt_data=data(0,0,0)
 while True:
     aw = vec(realistic_aws(),random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
@@ -104,8 +111,8 @@ while True:
     dpth = realistic_depth()
     heel = realistic_heel()
 
-    tws.value = data(tws)
-
+    #tws.value = data(tws)
+    mqtt_data=data(tws,twa,bsr)
     print("TWS:",tws,"TWA:",twa,"BS",bsr,"AWS:",aws,"AWA:",awa)
     print("Depth:", dpth,"Heel:", heel)
     print("========================================")

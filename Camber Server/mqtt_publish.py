@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-from boat_sim import data
+from boat_sim import mqtt_data
 
 client = mqtt.Client()
 client.connect("localhost",1883,60)
@@ -15,14 +15,12 @@ devicename = "Raspberry Server"
 while True:
     if source=="sim":
         
-        print(tws.value)
-        client.publish("wind/tws", aw.value) #true wind speed
-        client.publish("wind/twa", twa.value) #true wind angle
-        client.publish("wind/aws", aws.value) #apparent wind speed
-        client.publish("wind/awa", awa.value) #apparent wind angle
-        client.publish("boat/speed", bsr.value) #boat speed
-        client.publish("boat/depth", dpth.value) #depth
-        client.publish("boat/heel", heel.value) #boat heel
+        #print(tws.value)
+        client.publish("wind/tws", mqtt_data.tws) #true wind speed
+        client.publish("wind/twa",mqtt_data.twa) #true wind angle
+        
+        client.publish("boat/speed", mqtt_data.boat_speed) #boat speed
+        
 
 
 client.disconnect()
