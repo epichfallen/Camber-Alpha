@@ -5,11 +5,13 @@ Created on Wed May  6 00:22:15 2020
 @author: piping,epicfallen
 """
 
+from __main__ import *
 from time import sleep
 import random
 from wa_calc import vec
 from wa_calc import vec_add
 from wa_calc import boat_to_compass
+
 
 
 #global variables
@@ -76,6 +78,7 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
         aw_mag_log=aw_mag_log[-5:] 
         return tempsum/5           
 
+   
 
 
 while True:
@@ -88,14 +91,21 @@ while True:
     tw = vec_add(aw,COG)
     sleep(0.15)
 
-    print("TWS:",round(tw.mag,1),"TWA:",round(boat_to_compass(heading,tw.angle),1),"BS",round(bs,1),"AWS:",round(aw.mag,1),"AWA:",round(abs(aw.angle),1))
+    tws  = round(tw.mag,1)
+    twa  = round(boat_to_compass(heading,tw.angle),1)
+    awa  = round(abs(aw.angle),1)
+    aws  = round(aw.mag,1)
+    bsr  = round(bs,1)
+    dpth = realistic_depth()
+    heel = realistic_heel()
 
-    print("Depth:", realistic_depth(),"Heel:", realistic_heel())
+    print("TWS:",tws,"TWA:",twa,"BS",bsr,"AWS:",aws,"AWA:",awa)
+    print("Depth:", dpth,"Heel:", heel)
     print("============================================================")
   
     
-    
-    
+   
+
     
     
 
