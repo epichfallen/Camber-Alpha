@@ -23,6 +23,11 @@ startheel = 20 #start depth value
 tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
 
+class data:
+    def __init__(self,value):
+        self.value=value
+        
+
 
 def realistic_heading(input):#generate realistic heading data
     max = input + 1
@@ -98,6 +103,8 @@ while True:
     bsr  = round(bs,1)
     dpth = realistic_depth()
     heel = realistic_heel()
+
+    tws.value = data(tws)
 
     print("TWS:",tws,"TWA:",twa,"BS",bsr,"AWS:",aws,"AWA:",awa)
     print("Depth:", dpth,"Heel:", heel)
