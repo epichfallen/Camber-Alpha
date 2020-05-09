@@ -7,11 +7,13 @@ Created on Wed May  6 00:22:15 2020
 
 
 import random
+import mqtt_publish as mqtt
 from time import sleep
 from wa_calc import vec
 from wa_calc import vec_add
 from wa_calc import boat_to_compass
 
+mqtt.connect()
 
 
 #global variables
@@ -23,18 +25,8 @@ startheel = 20 #start depth value
 tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
 
-class data:
-    tws=0
-    twa=0
-    boat_speed=0
-    def __init__(self,tws2,twa2,boat_speed2):
-        self.tws=tws2
-        self.twa=twa2
-        self.boat_speed=boat_speed2
-    
-        
-        
 
+        
 
 def realistic_heading(input):#generate realistic heading data
     max = input + 1
@@ -91,8 +83,8 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
         return tempsum/5           
 
    
+print("**Simulation Started**")
 
-mqtt_data=data(0,0,0)
 while True:
     aw = vec(realistic_aws(),random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
@@ -101,7 +93,7 @@ while True:
     COG = vec(bs, 180)
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
-    sleep(0.15)
+    sleep(0.1)
 
     tws  = round(tw.mag,1)
     twa  = round(boat_to_compass(heading,tw.angle),1)
@@ -111,11 +103,14 @@ while True:
     dpth = realistic_depth()
     heel = realistic_heel()
 
-    #tws.value = data(tws)
-    mqtt_data=data(tws,twa,bsr)
-    print("TWS:",tws,"TWA:",twa,"BS",bsr,"AWS:",aws,"AWA:",awa)
-    print("Depth:", dpth,"Heel:", heel)
-    print("========================================")
+    mqtt.publish("wind/tws",tws)
+    mqtt.publish("wind/twa",twa)
+    mqtt.publish("wind/aws",aws)
+    mqtt.publish("wind/aws",aws)
+    mqtt.publish("boat/speed",bsr)
+    mqtt.publish("boat/depth",dpth)
+    mqtt.publish("boat/heel" ,heel)
+
   
     
    
