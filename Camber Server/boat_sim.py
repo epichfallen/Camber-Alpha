@@ -12,6 +12,7 @@ from time import sleep
 from wa_calc import vec
 from wa_calc import vec_add
 from wa_calc import boat_to_compass
+import datetime
 
 mqtt.connect()
 
@@ -24,7 +25,8 @@ tempdepth = startdepth #set the temporary value to start depth
 startheel = 20 #start depth value
 tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
-
+time = datetime.datetime.now()
+starttime = time + datetime.timedelta(minutes=5)
 
         
 
@@ -86,6 +88,7 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 print("**Simulation Started**")
 
 while True:
+    
     aw = vec(realistic_aws(),random.randint(3655,3755)/100)
     aawm = average_aw_mag(aw.mag)
     #aw.mag=aawm
@@ -95,6 +98,7 @@ while True:
     tw = vec_add(aw,COG)
     sleep(0.1)
 
+   
     tws  = round(tw.mag,1)
     twa  = round(boat_to_compass(heading,tw.angle),1)
     awa  = round(abs(aw.angle),1)
@@ -103,6 +107,10 @@ while True:
     dpth = realistic_depth()
     heel = realistic_heel()
 
+    time = datetime.datetime.now()
+    print(starttime-time)
+
+    mqtt.publish("time/now",time.strftime("%Y-%m-%d %H:%M:%S"))
     mqtt.publish("wind/tws",tws)
     mqtt.publish("wind/twa",twa)
     mqtt.publish("wind/aws",aws)
