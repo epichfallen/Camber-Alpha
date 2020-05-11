@@ -6,7 +6,12 @@ Created on Wed May  6 00:22:15 2020
 """
 
 import math
-
+class gps_coordinate:
+    def __init__(self,la,longt):
+        self.latitude=la
+        self.longtitude=longt
+        
+        
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag
@@ -47,3 +52,45 @@ def boat_to_compass(boat_heading,twa):
         return tw_bearing+360
     else:
         return tw_bearing
+
+def pars_gps_data(gpsdata):
+    data=gpsdata.split(",")
+    str_latitude_min=''
+    str_latitude_deg=''
+    str_longtitude_min=''
+    str_longtitude_deg=''
+    if data[0]=="$GPRMC" and data[2]=="A":
+        for i in data[3]:
+            if i==".":
+                for j in range(i-2,i+2):
+                    str_longtitude_min+=j
+                break
+        lat_deg_temp=data[3]-str_latitude_min
+        str_latitude_deg+=lat_deg_temp
+        float_lat_deg=float(str_latitude_deg)+float(str_latitude_min)/60
+        for i in data[3]:
+            if i==".":
+                for j in range(i-2,i+2):
+                    str_longtitude_min+=j
+                break
+        longt_deg_temp=data[3]-str_longtitude_min
+        str_longtitude_deg+=longt_deg_temp
+        float_longt_deg=float(str_longtitude_deg)+float(str_longtitude_min)/60
+        return gps_coordinate(float_lat_deg, float_longt_deg)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
