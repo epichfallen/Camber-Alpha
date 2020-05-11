@@ -9,9 +9,7 @@ Created on Wed May  6 00:22:15 2020
 import random
 import mqtt_publish as mqtt
 from time import sleep
-from wa_calc import vec
-from wa_calc import vec_add
-from wa_calc import boat_to_compass
+from wa_calc import *
 
 mqtt.connect()
 
