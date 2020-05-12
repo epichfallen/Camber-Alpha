@@ -39,6 +39,8 @@ def vec_add( vec1, vec2):
     vec3=vec(vec3mag,radian_to_degrees(vec3angle))
     return vec3
 
+#boat_to_compass takes degrees not radian and converts it to compass bearing,note that twa is taken inverted as not where it
+#directs but as where it comes from
 def boat_to_compass(boat_heading,twa):
     tw_bearing=boat_heading+twa
     if tw_bearing>=360:
@@ -48,14 +50,14 @@ def boat_to_compass(boat_heading,twa):
     else:
         return tw_bearing
     
-class gps_coordinates:
+class gps_coords:
     def __init__(self,lat,longt):
         self.latitude=lat
         self.longtitude=longt
 
 def gps_parser(gps_data):
     parsed_data=pynmea2.parse(gps_data)
-    return gps_coordinates(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon))
+    return gps_coords(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon))
     
     
     
