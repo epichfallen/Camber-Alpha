@@ -54,6 +54,8 @@ class gps_coordinates:
         self.longtitude=longt
 
 def gps_parser(gps_data):
-    data=gps_data.split(",")
-    if data[0]=="$GPGGA":
-        return gps_coordinates(pynmea2.dm_to_sd(data[2]), pynmea2.dm_to_sd(data[4]))
+    parsed_data=pynmea2.parse(gps_data)
+    return gps_coordinates(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon))
+    
+    
+    
