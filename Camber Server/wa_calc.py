@@ -6,7 +6,7 @@ Created on Wed May  6 00:22:15 2020
 """
 
 import math
-
+import pynmea2
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag
@@ -47,3 +47,13 @@ def boat_to_compass(boat_heading,twa):
         return tw_bearing+360
     else:
         return tw_bearing
+    
+class gps_coordinates:
+    def __init__(self,lat,longt):
+        self.latitude=lat
+        self.longtitude=longt
+
+def gps_parser(gps_data):
+    data=gps_data.split(",")
+    if data[0]=="$GPGGA":
+        return gps_coordinates(pynmea2.dm_to_sd(data[2]), pynmea2.dm_to_sd(data[4]))
