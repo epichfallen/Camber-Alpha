@@ -59,5 +59,24 @@ def gps_parser(gps_data):
     parsed_data=pynmea2.parse(gps_data)
     return gps_coords(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon))
     
+
+
+
+#distance between 2 gps points on earth using haversine formula
+#needs to be tested with more sample
+def distance_between_twogps(gps1,gps2):
+    #radius of the earth in km
+    r=6371
+    lat_dif=degrees_to_radian(gps1.latitude-gps2.latitude)
+    long_dif=degrees_to_radian(gps1.longtitude-gps2.longtitude)
+    lat1=degrees_to_radian(gps1.latitude)
+    lat2=degrees_to_radian(gps2.latitude)
+    
+    return 2*r*math.asin(math.sqrt((math.sin(lat_dif/2)**2)+math.cos(lat1)*math.cos(lat2)*(math.sin(long_dif/2)**2)))
+
+
+
+
+
     
     
