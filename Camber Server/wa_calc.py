@@ -51,13 +51,15 @@ def boat_to_compass(boat_heading,twa):
         return tw_bearing
     
 class gps_coords:
-    def __init__(self,lat,longt):
+    def __init__(self,lat,longt,lat_dir,long_dir):
         self.latitude=lat
         self.longtitude=longt
+        self.latitude_dir=lat_dir
+        self.longtitude_dir=long_dir
 
 def gps_parser(gps_data):
     parsed_data=pynmea2.parse(gps_data)
-    return gps_coords(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon))
+    return gps_coords(pynmea2.dm_to_sd(parsed_data.lat), pynmea2.dm_to_sd(parsed_data.lon),parsed_data.lat_dir,parsed_data.lon_dir)
     
 
 
