@@ -69,12 +69,23 @@ def gps_parser(gps_data):
 def distance_between_twogps(gps1,gps2):
     #radius of the earth in km
     r=6371
-    lat_dif=degrees_to_radian(gps1.latitude-gps2.latitude)
-    long_dif=degrees_to_radian(gps1.longtitude-gps2.longtitude)
+    if gps1.latitude_dir!=gps2.latitude_dir:
+        lat_dif=degrees_to_radian(gps1.latitude+gps2.latitude)
+    else:
+        lat_dif=degrees_to_radian(abs(gps1.latitude-gps2.latitude))
+    
+    if gps1.longtitude_dir!=gps2.longtitude_dir:
+        long_dif=degrees_to_radian(gps1.longtitude+gps2.longtitude)
+        
+    else:
+        long_dif=degrees_to_radian(abs(gps1.longtitude-gps2.longtitude))
+        
     lat1=degrees_to_radian(gps1.latitude)
     lat2=degrees_to_radian(gps2.latitude)
     
     return 2*r*math.asin(math.sqrt((math.sin(lat_dif/2)**2)+math.cos(lat1)*math.cos(lat2)*(math.sin(long_dif/2)**2)))
+
+
 
 
 
