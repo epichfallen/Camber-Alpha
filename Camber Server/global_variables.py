@@ -12,4 +12,5 @@ tempheel = startheel #set the temporary value to start depth
 aw_mag_log=[]
 time = datetime.datetime.now()
 starttime = time + datetime.timedelta(minutes=5)
-
+to_line=0 #distance between the boat and the startline needed to see the change
+epoch_time=0 #time since epoch in seconds needed to calculate the approach speed to the distance will be added soon

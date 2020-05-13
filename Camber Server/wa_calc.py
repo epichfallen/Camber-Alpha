@@ -140,6 +140,40 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
         aw_mag_log=aw_mag_log[-5:] 
         return tempsum/5           
 
+def eta_to_startline(gpsline1,gpsline2,gps_boat):
+    global to_line
+    
+    global epoch_time
+    #first finding the shift between truewind and line(in an optimal startline truewind is perpendicular to the line)
+    #gonna use arctan2 to find the angle of the line according to compass coordinate system
+    
+    #these are lines of the triangle gpsline1 being the committee boat and gpsline2 being the portside buoy
+    line1=gpsline1.latitude-gpsline2.latitude
+    line2=gpsline1.longtitude-gpsline2-longtitude
+    #length of the line in meters
+    len_line=distance_between_twogps(line1, line2)
+    #distance between the boat and the portside of the startline and to comittee
+    boat_to_buoy=distance_between_twogps(line2, gps_boat)
+    boat_to_comittee=distance_between_twogps(line1, gps_boat)
+    #now going to use the formula called "Heron's formula" to calculate the perpendicular line to the
+    #startline from the boat
+    s=(boat_to_comittee+boat_to_buoy+len_line)/2
+    distance=(2*math.sqrt(s*(s-boat_to_comittee)*(s-boat_to_buoy)*(s-len_line)))/2
+    timestamp=int(time.time())
+    t
+    if epoch_time==0:
+        epoch_time=timestamp
+        to_line=distance
+        return 0
+    else:
+        delta_distance=to_line-distance
+        delta_time=timestamp-epoch_time
+        speed=delta_distance/delta_time
+        eta_in_seconds=distance/speed
+        epoch_time=int(time.time())
+        to_line=distance
+        return eta_in_seconds
+
 
 
     
