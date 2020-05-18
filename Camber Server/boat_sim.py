@@ -21,7 +21,7 @@ mqtt.connect()
 
    
 print("**Simulation Started**")
-
+boat_gps=gps_coords(40, 55, 'N', 'E')
 while True:
     
     aw = vec(realistic_aws(),random.randint(3655,3755)/100)
@@ -31,6 +31,7 @@ while True:
     COG = vec(bs, 180)
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
+    boat_gps=generate_gps(heading, bs, boat_gps)
     sleep(0.1)
 
    
@@ -43,8 +44,10 @@ while True:
     heel = realistic_heel(aw)
 
     time = datetime.datetime.now()
-    print(starttime-time)
-
+    
+    
+    mqtt.publish("COORDINATES latitude", boat_gps.latitude)
+    mqtt.publish("COORDINATES longtitude", boat_gps.longtitude)
     mqtt.publish("time/now",time.strftime("%Y-%m-%d %H:%M:%S"))
     mqtt.publish("wind/tws",tws)
     mqtt.publish("wind/twa",twa)

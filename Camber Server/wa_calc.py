@@ -65,8 +65,8 @@ def gps_parser(gps_data):
 #distance between 2 gps points on earth using haversine formula
 #needs to be tested with more sample
 def distance_between_twogps(gps1,gps2):
-    #radius of the earth in km
-    r=6371
+    #radius of the earth in meters
+    r=6371e3
     if gps1.latitude_dir!=gps2.latitude_dir:
         lat_dif=degrees_to_radian(gps1.latitude+gps2.latitude)
     else:
@@ -143,7 +143,7 @@ def average_aw_mag(aw): #generate average from the last 5 values of aws
 def eta_to_startline(gpsline1,gpsline2,gps_boat):
     global to_line
     
-    global epoch_time
+    global epoch_time_etaline
     #first finding the shift between truewind and line(in an optimal startline truewind is perpendicular to the line)
     #gonna use arctan2 to find the angle of the line according to compass coordinate system
     
@@ -160,21 +160,81 @@ def eta_to_startline(gpsline1,gpsline2,gps_boat):
     s=(boat_to_comittee+boat_to_buoy+len_line)/2
     distance=(2*math.sqrt(s*(s-boat_to_comittee)*(s-boat_to_buoy)*(s-len_line)))/2
     timestamp=int(time.time())
-    t
-    if epoch_time==0:
-        epoch_time=timestamp
+    
+    if epoch_time_etaline==0:
+        epoch_time_etaline=timestamp
         to_line=distance
         return 0
     else:
         delta_distance=to_line-distance
-        delta_time=timestamp-epoch_time
+        delta_time=timestamp-epoch_time_etaline
         speed=delta_distance/delta_time
         eta_in_seconds=distance/speed
-        epoch_time=int(time.time())
+        epoch_time_etaline=int(time.time())
         to_line=distance
         return eta_in_seconds
 
-
+def generate_gps(heading,boatspd,gps_boat):
+    r=6371e3 #radius of earth in meters
+    global epoch_time_gpsgen
+    boat_latmag=0 #going to be the new latitude after moving in iteration
+    boat_lonmag=0 # new longtitude
+    boatspdm=(boatspd*1.85)/3.6 #boatspeed translated to m/s from nauticalmile/h aka Knots
+    delta_time=0
+    distance_taken=0 
+    timestamp=int(time.time())
+    if epoch_time_gpsgen==0:
+        epoch_time_gpsgen=timestamp
+        return gps_boat
+    else:
+        delta_time=timestamp-epoch_time_gpsgen
+        distance_taken=boatspdm*delta_time
+    distancelat=distance_taken*math.cos(degrees_to_radian(heading)) #distance taken in north-south direction
+    distancelon=distance_taken*math.sin(degrees_to_radian(heading))
+    if heading<90 and heading>270:
+        if gps_boat.latitude_dir=='N':
+            boat_latmag=gps_boat.latitude+(distancelat/r)
+        elif gps_boat.latitude_dir=='S':
+            boat_latmag=gps_boat.latitude-(distancelat/r)
+    elif heading>90 and heading<270:
+         if gps_boat.latitude_dir=='N':
+            boat_latmag=gps_boat.latitude-(distancelat/r)
+         elif gps_boat.latitude_dir=='S':
+            boat_latmag=gps_boat.latitude+(distancelat/r)
+    boat_latmag=radian_to_degrees(boat_latmag)
+    #these are distances per 1 longtitude degrees at designated latitude
+    distance_lon1=distance_between_twogps(gps_boat,gps_coords(gps_boat.latitude, gps_boat.longtitude-1, gps_boat.latitude_dir, gps_boat.longtitude_dir))
+    distance_lon2=distance_between_twogps(gps_coords(boat_latmag,gps_boat.longtitude,gps_boat.latitude_dir,gps_boat.longtitude_dir)
+                                          , gps_coords(boat_latmag,gps_boat.longtitude-1,gps_boat.latitude_dir,gps_boat.longtitude_dir))
+    distance_ave=(distance_lon1+distance_lon2)/2
+    if heading>180 and heading<360:
+        if gps_boat.longtitude_dir=='W':
+            boat_lonmag=gps_boat.longtitude+(distancelon/distance_ave)
+        elif gps_boat.longtitude_dir=='E':
+            boat_lonmag=gps_boat.longtitude-(distancelon/distance_ave)
+    elif heading<180:
+        if gps_boat.longtitude_dir=='W':
+            boat_lonmag=gps_boat.longtitude-(distancelon/distance_ave)
+        elif gps_boat.longtitude_dir=='E':
+            boat_lonmag=gps_boat.longtitude+(distancelon/distance_ave)
+    return gps_coords(boat_latmag, boat_lonmag, gps_boat.latitude_dir, gps_boat.longtitude_dir)
+        
+    
+            
+            
+             
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     
     
