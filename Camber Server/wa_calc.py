@@ -189,18 +189,18 @@ def generate_gps(heading,boatspd,gps_boat):
     else:
         delta_time=timestamp-epoch_time_gpsgen
         distance_taken=boatspdm*delta_time
-    distancelat=distance_taken*math.cos(degrees_to_radian(heading)) #distance taken in north-south direction
-    distancelon=distance_taken*math.sin(degrees_to_radian(heading))
-    if heading<90 and heading>270:
+    distancelat=abs(distance_taken*math.cos(degrees_to_radian(heading))) #distance taken in north-south direction
+    distancelon=abs(distance_taken*math.sin(degrees_to_radian(heading)))
+    if heading<90 or heading>270:
         if gps_boat.latitude_dir=='N':
-            boat_latmag=gps_boat.latitude+(distancelat/r)
+            boat_latmag=degrees_to_radian(gps_boat.latitude)+(distancelat/r)
         elif gps_boat.latitude_dir=='S':
-            boat_latmag=gps_boat.latitude-(distancelat/r)
+            boat_latmag=degrees_to_radian(gps_boat.latitude)-(distancelat/r)
     elif heading>90 and heading<270:
          if gps_boat.latitude_dir=='N':
-            boat_latmag=gps_boat.latitude-(distancelat/r)
+            boat_latmag=degrees_to_radian(gps_boat.latitude)-(distancelat/r)
          elif gps_boat.latitude_dir=='S':
-            boat_latmag=gps_boat.latitude+(distancelat/r)
+            boat_latmag=degrees_to_radian(gps_boat.latitude)+(distancelat/r)
     boat_latmag=radian_to_degrees(boat_latmag)
     #these are distances per 1 longtitude degrees at designated latitude
     distance_lon1=distance_between_twogps(gps_boat,gps_coords(gps_boat.latitude, gps_boat.longtitude-1, gps_boat.latitude_dir, gps_boat.longtitude_dir))
