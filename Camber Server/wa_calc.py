@@ -4,6 +4,12 @@ import math
 import pynmea2
 import random
 from global_variables import *
+import sqlite3
+
+
+def write_to_db(cursor):
+    
+
 
 class vec:
     def __init__(self,mag,angle):
