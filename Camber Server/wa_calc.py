@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-
 import math
 import pynmea2
 import random
 from global_variables import *
+
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag

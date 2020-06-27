@@ -1,30 +1,27 @@
 # -*- coding: utf-8 -*-
-
-
-
-
 import mqtt_publish as mqtt
 from time import sleep
 from wa_calc import *
-
-
 import datetime
 
 
 mqtt.connect()
 
+mqtt.publish_retained("display/2fc4f5fc/config","4,0,1,2,3")
+
+import datetime
+from datetime import timedelta  
+
+counter_mins = 5
+starttime = int(time.time() + counter_mins*60)
+mqtt.publish("race/starttime",starttime)
 
 
-
-        
-
-
-   
 print("**Simulation Started**")
 boat_gps=gps_coords(40, 55, 'N', 'E')
 while True:
     
-    aw = vec(realistic_aws(),random.randint(3655,3755)/100)
+    aw = vec(realistic_aws(),random.randint(3355,3755)/100)
     aawm = average_aw_mag(aw.mag)
     #aw.mag=aawm
     bs = boat_speed(aawm)
@@ -32,7 +29,7 @@ while True:
     heading = realistic_heading(120)#set the heading
     tw = vec_add(aw,COG)
     boat_gps=generate_gps(heading, bs, boat_gps)
-    sleep(0.1)
+    sleep(0.3) 
 
    
     tws  = round(tw.mag,1)
@@ -43,20 +40,36 @@ while True:
     dpth = realistic_depth()
     heel = realistic_heel(aw)
 
-    time = datetime.datetime.now()
     
+    
+    twawithzero = str(int(tw.angle))
+    if len(twawithzero) < 3 :
+        twawithzero = "0" + twawithzero
+    awawithzero = str(int(awa))
+    if len(awawithzero) < 3 :
+        awawithzero = "0" + awawithzero
+    
+
+    
+
+
+    # bundle = str(tws) +","+ str(round(tw.angle,1)) +","+ str(aws) +","+ str(awa) +","+ str(bsr) +","+ str(dpth) +","+ str(heel)
+    # print (bundle)
     
     mqtt.publish("COORDINATES latitude", boat_gps.latitude)
     mqtt.publish("COORDINATES longtitude", boat_gps.longtitude)
-    mqtt.publish("time/now",time.strftime("%Y-%m-%d %H:%M:%S"))
+
     mqtt.publish("wind/tws",tws)
-    mqtt.publish("wind/twa",twa)
-    mqtt.publish("wind/twa to boat",round(tw.angle,1))
-    mqtt.publish("wind/aws",aws)
-    mqtt.publish("wind/awa",awa)
-    mqtt.publish("boat/speed",bsr)
-    mqtt.publish("boat/depth",dpth)
-    mqtt.publish("boat/heel" ,heel)
+    mqtt.publish("wind/twa",twawithzero)
+    mqtt.publish("wind/aws",str(aws))
+    mqtt.publish("wind/awa",awawithzero)
+    mqtt.publish("boat/speed",str(bsr))
+    mqtt.publish("boat/heel" ,str(heel))
+    mqtt.publish("boat/depth",str(dpth))
+    
+    # mqtt.publish("bundle/all",bundle)
+   
+    
 
   
     
