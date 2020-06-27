@@ -24,14 +24,14 @@ def on_message(client, userdata, msg):
 
 client = mqtt.Client()
 client.on_message = on_message
-client.connect("192.168.1.46",1883,60)
+client.connect("localhost",1883,60)
 client.subscribe("server/config/#",0)
 client.loop_start()
 
 
 def connect():
     client = mqtt.Client()
-    client.connect("192.168.1.46",1883,60)
+    client.connect("localhost",1883,60)
 
 def publish_retained(t,d):
     client.publish(t, d, qos=0, retain=True)
