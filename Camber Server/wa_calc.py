@@ -7,6 +7,9 @@ from global_variables import *
 import sqlite3
 
 
+
+
+
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag
