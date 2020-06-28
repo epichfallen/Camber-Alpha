@@ -89,7 +89,15 @@ def distance_between_twogps(gps1,gps2):
     return 2*r*math.asin(math.sqrt((math.sin(lat_dif/2)**2)+math.cos(lat1)*math.cos(lat2)*(math.sin(long_dif/2)**2)))
 
 
-
+def SOG(gps1,gps2,gps_time1,gps_time2):
+    date = datetime.date(1, 1, 1)
+    datetime1 = datetime.datetime.combine(date, gps_time1)
+    datetime2 = datetime.datetime.combine(date, gps_time2)
+    time_elapsed = datetime2 - datetime1
+    if time_elapsed.total_seconds() != 0:
+        return round(distance_between_twogps(gps1,gps2)/(time_elapsed.total_seconds())*3.6/1.86,1)
+    else:
+        return 0
 
 def realistic_heading(input):#generate realistic heading data
     max = input + 1
