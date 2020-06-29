@@ -9,7 +9,6 @@ import sqlite3
 
 
 
-
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag
@@ -24,7 +23,7 @@ def radian_to_degrees(angle_rad):
     return angle_rad*(180/math.pi)
         
     
-def vec_add( vec1, vec2):
+def vec_add(vec1, vec2):
     vec1x=vec1.mag*math.cos(degrees_to_radian(vec1.angle))
     vec1y=vec1.mag*math.sin(degrees_to_radian(vec1.angle))
     #calculating x and y components of vectors vector_magnitude*cos(degree)==vector.x 
@@ -48,7 +47,7 @@ def boat_to_compass(boat_heading,twa):
     tw_bearing=boat_heading+twa
     if tw_bearing>=360:
         return tw_bearing-360
-    elif tw_bearing<=0:
+    elif tw_bearing<0:
         return tw_bearing+360
     else:
         return tw_bearing
@@ -98,6 +97,16 @@ def SOG(gps1,gps2,gps_time1,gps_time2):
         return round(distance_between_twogps(gps1,gps2)/(time_elapsed.total_seconds())*3.6/1.86,1)
     else:
         return 0
+
+def COG(gps1,gps2):
+    lat1 = math.radians(gps1.latitude)
+    lat2 = math.radians(gps2.latitude)
+    dLon = math.radians(gps2.longtitude - gps1.longtitude)
+    y = math.sin(dLon) * math.cos(lat2)
+    x = math.cos(lat1)*math.sin(lat2) - math.sin(lat1)*math.cos(lat2)*math.cos(dLon)
+    z = math.atan2(y, x)
+    brng = (math.degrees(z) + 360) % 360
+    return(round(brng,1))
 
 def realistic_heading(input):#generate realistic heading data
     max = input + 1

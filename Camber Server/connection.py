@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import sqlite3
 
-localserver = "192.168.1.34"
+localserver = "192.168.1.26"
 
 class serverconfig: #create class for server config data
     def __init__(self,input):
