@@ -51,9 +51,9 @@ while True:
             aw = vec(realistic_aws(),random.randint(3355,3755)/100)
             aawm = average_aw_mag(aw.mag)
             bs = boat_speed(aawm)
-            COG = vec(bs, 180)
+            boat_vec = vec(bs, 180)
             heading = realistic_heading(120)#set the heading
-            tw = vec_add(aw,COG)
+            tw = vec_add(aw,boat_vec)
             boat_gps=generate_gps(heading, bs, boat_gps)
             sleep(0.3) 
         
