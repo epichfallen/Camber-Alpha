@@ -149,7 +149,7 @@ while True:
                 pass
             
             try: #CALCULATE TWS,TWA,TWD USING GPS AND APPARENT WIND
-                if awa,aws!=0:
+                
                 aw = vec(aws,awa) #construct apparent wind vector   
                 csog = vec(sog, cog)
                 tw = vec_add(aw,csog)    
@@ -159,7 +159,7 @@ while True:
                 print("TWS:", tws)
                 print("TWA:", twa)
                 print("TWS_CSOGpipi:",tw_csog.mag)
-                print("TWA_CSOGpipiang",tw_csog.angle)
+                print("TWA_CSOGpipiang",tw_csog.angle() )
             except:
                 pass
             
