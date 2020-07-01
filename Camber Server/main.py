@@ -155,8 +155,11 @@ while True:
                 tw = vec_add(aw,csog)    
                 tws  = round(tw.mag,1)
                 twa  = round(tw.angle,1)
+                tw_csog=truewind_csog(aw, csog)
                 print("TWS:", tws)
                 print("TWA:", twa)
+                print("TWS_CSOGpipi:",tw_csog.mag)
+                print("TWA_CSOGpipiang",tw_csog.angle)
             except:
                 pass
             
