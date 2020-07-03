@@ -14,6 +14,11 @@ class vec:
         self.mag=mag
         self.angle=angle
 
+def awa_convert(awa,l_r):
+    if l_r == 'L':
+        awa = -awa
+    return awa
+
 
 def degrees_to_radian(angle_deg):
     return angle_deg*(math.pi/180)
@@ -41,88 +46,12 @@ def vec_add(vec1, vec2):
     vec3=vec(vec3mag,radian_to_degrees(vec3angle))
     return vec3
 
-
-def deg_to_cartes(deg): #returns a value between 0-89 and the zone
-    lst = []
-    if deg < 90 and deg >= 0: #zone 1
-        lst = [90-deg,1]
-        return lst
-    if deg < 180 and deg >= 90: #zone 2
-        lst = [deg-90,2]
-        return lst
-    if deg < 270 and deg >= 180: #zone 3
-        deg = 90-(deg-180)
-        lst = [deg-180,3]
-        return lst
-    if deg < 360 and deg >= 270: #zone 4
-        lst = [deg-270,4]
-        return lst
-
-def getvec_xy(vec,zone):
-    x = vec.mag * math.cos(degrees_to_radian(vec.angle))
-    y = vec.mag * math.sin(degrees_to_radian(vec.angle))
-    if zone == 1:
-        lst = [x,y]
-    if zone == 2:
-        lst = [x,-y]
-    if zone == 3:
-        lst = [x,y]
-    if zone == 4:
-        lst = [-x,y]    
-    return lst
-
-def coor_add(coor1, coor2):
-    x = coor1[0] + coor2[0]
-    y = coor1[1] + coor2[1]
-    lst = [x,y]
-    return lst
-
-def coor_to_vec(lst):
-    angle = math.atan(lst[1]/lst[0])
-    mag = math.sqrt(lst[1]**2 + lst[0]**2)
-
-    if lst[0] > 0 and lst[1] > 0: #zone1
-        angle = 90 - angle
-    if lst[0] > 0 and lst[1] < 0: #zone2
-        angle = angle + 90
-    if lst[0] < 0 and lst[1] < 0: #zone3
-        angle = 180 + (90-angle)
-    if lst[0] < 0 and lst[1] > 0: #zone4  
-        angle = angle + 270
-
-    vec_converted = vec(mag,angle)
-
-    return vec_converted
-
-def vec_add2(vec1,vec2):
-
-    cart1 = deg_to_cartes(vec1.angle) #convert degrees to cartesian and get zone
-    cart2 = deg_to_cartes(vec2.angle)
+def TWD(heading,twa):
+    twd = heading + twa
+    if twd >= 360:
+        twd= twd-360
+    return twd
     
-
-    tempvec1 = vec(vec1.mag, cart1[0]) #create temp vec
-    tempvec2 = vec(vec2.mag, cart2[0])
-
-    xy1 = getvec_xy(tempvec1,cart1[1])  
-    xy2 = getvec_xy(tempvec2,cart2[1])
-
-    xyadded = coor_add(xy1,xy2)
-    print(xyadded)
-    newvec  = coor_to_vec(xyadded)
-
-    return newvec
-
-def awd(heading,awa,l_r):
-    if l_r == 'L':
-        awd=heading-awa
-    if l_r == 'R':
-        awd=heading+awa
-    if awd >=360:
-        return awd - 360
-    elif awd <0:
-        return awd + 360
-    else: 
-        return awd   
 
 
 

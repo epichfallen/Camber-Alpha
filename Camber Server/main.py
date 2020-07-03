@@ -158,21 +158,16 @@ while True:
                 awa = msg.deg_r 
                 aws = msg.wind_speed_kn
                 if awa is not None and aws is not None and cog is not None and sog is not None:
-                    
-                    aw = vec(aws,awd(hdg,awa,l_r)) #construct apparent wind vector   
-                    print("AWD: ",awd(hdg,awa,l_r))
-                    csog = vec(sog, cog)
-                    tw = vec_add2(aw,csog)    
+                    aw = vec(aws,awa_convert(awa,l_r)) #construct apparent wind vector   
+                    csog = vec(sog,180)
+                    tw = vec_add(aw,csog)
                     tws  = round(tw.mag,1)
-                    twd  = round(tw.angle,1)
-                    # if cog!=0:
-                    #     twd = round(boat_to_compass(cog,tw.angle),1)
-                    # else:
-                    #     twd = round(boat_to_compass(hdg,tw.angle),1)
+                    twa  = round(tw.angle,1)
+                    twd  = TWD(hdg,tw.angle)
                     print("TWS:", tws)
-                    print("TWD:", twd)
+                    print("TWA:", twa)
+                    print("TWD:", round(twd,1))
 
-            
 
                 elif awa is not None and aws is not None and bs is not None and hdg is not None and cog is None:
                     aw = vec(aws,awa) #construct apparent wind vector   
@@ -186,7 +181,7 @@ while True:
                     print("TWD:", twd)
                     
             except Exception as e:
-                # print(e)
+                print(e)
                 pass        
 
             print("========")
