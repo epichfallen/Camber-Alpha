@@ -7,8 +7,6 @@ from global_variables import *
 import sqlite3
 
 
-
-
 class vec:
     def __init__(self,mag,angle):
         self.mag=mag
@@ -257,34 +255,7 @@ def generate_gps(heading,boatspd,gps_boat):
     return gps_coords(boat_latmag, boat_lonmag, gps_boat.latitude_dir, gps_boat.longtitude_dir)
         
     
-            
-def truewind_csog(aw,vec2):
-    aw_angle=(aw.angle+vec2.angle)%360
-    if aw_angle<0:
-        aw_angle+=360
-    vec1x=aw.mag*math.sin(degrees_to_radian(aw_angle))
-    vec1y=aw.mag*math.cos(degrees_to_radian(aw_angle))
-    #calculating x and y components of vectors vector_magnitude*cos(degree)==vector.x 
-    vec2x=vec2.mag*math.sin(degrees_to_radian(vec2.angle))
-    vec2y=vec2.mag*math.cos(degrees_to_radian(vec2.angle))
-    
-    vec3x=vec2x-vec1x
-    vec3y=vec2y-vec1y
-    
-    vec3mag=math.sqrt((vec3x**2)+(vec3y**2))
-    if aw.angle==0:
-        vec3angle=0
-    else:
-        vec3angle=math.atan2(vec3y,vec3x)
-    vec3deg=radian_to_degrees(vec3angle)
-    vec3deg+=vec2.angle
-    if vec3deg<0:
-        vec3deg+=360
-    elif vec3deg>=360:
-        vec3deg=vec3deg%360
-    vec3=vec(vec3mag,vec3deg)
-    return vec3
-    #soon
+
     
              
              
