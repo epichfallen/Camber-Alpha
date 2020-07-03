@@ -14,6 +14,11 @@ class vec:
         self.mag=mag
         self.angle=angle
 
+def awa_convert(awa,l_r):
+    if l_r == 'L':
+        awa = -awa
+    return awa
+
 
 def degrees_to_radian(angle_deg):
     return angle_deg*(math.pi/180)
@@ -41,17 +46,27 @@ def vec_add(vec1, vec2):
     vec3=vec(vec3mag,radian_to_degrees(vec3angle))
     return vec3
 
+def TWD(heading,twa):
+    twd = heading + twa
+    if twd >= 360:
+        twd= twd-360
+    return twd
+    
+
+
+
 #boat_to_compass takes degrees not radian and converts it to compass bearing,note that twa is taken inverted as not where it
 #directs but as where it comes from
-def boat_to_compass(boat_heading,twa):
-    tw_bearing=boat_heading+twa
+def boat_to_compass(boat_heading,angle):
+    tw_bearing=boat_heading+angle
     if tw_bearing>=360:
         return tw_bearing-360
-    elif tw_bearing<0:
+    elif tw_bearing<=0:
         return tw_bearing+360
     else:
         return tw_bearing
     
+
 class gps_coords:
     def __init__(self,lat,longt,lat_dir,long_dir):
         self.latitude=lat

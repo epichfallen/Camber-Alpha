@@ -13,21 +13,23 @@ connection.connect()
 ser = serial.Serial('COM7', 115200, timeout=0.1)
 sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
 
-tws  = 0 #0
-twa  = 0 #1  
-aws  = 0 #2
-awa  = 0 #3
-bs   = 0 #4
-heel = 0 #5
-ptch = 0 #6
-dpth = 0 #7
-hdg  = 0 #8
-lat  = 0
-lon  = 0
+tws  = None #0
+twa  = None #1  
+twd  = None 
+aws  = None #2
+awa  = None #3
+l_r  = None
+bs   = None #4
+heel = None #5
+ptch = None #6
+dpth = None #7
+hdg  = None #8
+lat  = None
+lon  = None
 lat_dir = 'N'
 lon_dir = 'E'
-sog = 0
-cog = 0
+sog = None
+cog = None
 
 timenow = int(time.time())
 gps_time = datetime.time()
@@ -98,41 +100,45 @@ while True:
             try: # GET AWS DATA
                 aws = msg.wind_speed_kn
                 print("AWS:" , aws)
-                if aws != 0: #publish to mqtt if not 0
+                if aws != None: #publish to mqtt if not None
                     connection.publish("wind/aws",aws)
             except:
-                aws = 0
                 pass 
             try: #GET AWA DATA
                 awa = msg.deg_r 
-                print("AWA:" ,awa)
-                if awa != 0: #publish to mqtt if not 0
+                l_r = msg.l_r
+                print("AWA:" ,awa, l_r)
+
+                if awa != None: #publish to mqtt if not None
                     connection.publish("wind/awa",awa)
             except:
-                awa = 0
                 pass
             
             try: #GET GPS VALUES AND CALCULATE COG AND SOG
-                if lat != 0:
+                if lat is not None:
                     gps_old = gps_coords(lat,lon,lat_dir,lon_dir)
                     gps_new = gps_coords(float(msg.latitude),float(msg.longitude),msg.lat_dir,msg.lon_dir)
                     sog = SOG(gps_old,gps_new,gps_time,msg.timestamp)
                     cog = COG(gps_old,gps_new)
                     print("COG:",cog)
                     print("SOG:",sog)
-                lon = float(msg.longitude)
-                lat = float(msg.latitude)
-                lat_dir = msg.lat_dir
-                lon_dir = msg.lon_dir
-                gps_time = msg.timestamp
-                
+                try:
+                    lon = float(msg.longitude)
+                    lat = float(msg.latitude)
+                    lat_dir = msg.lat_dir
+                    lon_dir = msg.lon_dir
+                    gps_time = msg.timestamp
+                except:
+                    lon=None
+                    lat=None
+                    pass      
             except Exception as e:
                 # print(e)
                 pass
         
             try: #GET DEPTH DATA
                 dpth = msg.depth
-                print("Depth:" , dpth)
+                print("DPTH:" , dpth)
             except:
                 pass
 
@@ -143,28 +149,44 @@ while True:
                 pass
 
             try: #GET HEADING DATA
-                hdg = msg.heading_magnetic
+                hdg = float(msg.heading_magnetic)
                 print("HDG:" , hdg)
             except:
                 pass
             
-            try: #CALCULATE TWS,TWA,TWD USING GPS AND APPARENT WIND
-                
-                aw = vec(aws,awa) #construct apparent wind vector   
-                csog = vec(sog, cog)
-                tw = vec_add(aw,csog)    
-                tws  = round(tw.mag,1)
-                twa  = round(tw.angle,1)
-                tw_csog=truewind_csog(aw, csog)
-                print("TWS:", tws)
-                print("TWA:", twa)
-                print("TWS_CSOGpipi:",tw_csog.mag)
-                print("TWA_CSOGpipiang",tw_csog.angle() )
-            except:
-                pass
-            
-            
 
+            try:
+                awa = msg.deg_r 
+                aws = msg.wind_speed_kn
+                if awa is not None and aws is not None and cog is not None and sog is not None:
+                    aw = vec(aws,awa_convert(awa,l_r)) #construct apparent wind vector   
+                    csog = vec(sog,180)
+                    tw = vec_add(aw,csog)
+                    tws  = round(tw.mag,1)
+                    twa  = round(tw.angle,1)
+                    twd  = TWD(hdg,tw.angle)
+                    print("TWS:", tws)
+                    print("TWA:", twa)
+                    print("TWD:", round(twd,1))
+
+
+                elif awa is not None and aws is not None and bs is not None and hdg is not None and cog is None:
+                    aw = vec(aws,awa) #construct apparent wind vector   
+                    bhed = vec(float(bs), float(hdg)) 
+                    tw = vec_add(aw,bhed)    
+                    tws  = round(tw.mag,1)
+                    twa  = round(tw.angle,1)
+                    twd  = round(boat_to_compass(hdg,tw.angle),1)
+                    print("TWS:", tws) 
+                    print("TWA:", twa)
+                    print("TWD:", twd)
+                    
+            except Exception as e:
+                print(e)
+                pass        
+
+           
+            
             print("========")
 
             
@@ -174,6 +196,8 @@ while True:
             # if int(time.time()) - timenow >= 1:
             #     c.execute("INSERT INTO logbook VALUES (?,?,?,?,?,?,?,?,?,?,?)",(lat,lon,tws,twa,aws,awa,bsr,heel,dpth,heading,int(time.time())))
             #     time = int(time.time())
+
+
         except serial.SerialException as e:
             print('Device error: {}'.format(e))
             break
