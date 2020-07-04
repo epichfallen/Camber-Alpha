@@ -18,6 +18,9 @@ def awa_convert(awa,l_r):
     return awa
 
 
+
+
+
 def degrees_to_radian(angle_deg):
     return angle_deg*(math.pi/180)
         
@@ -44,11 +47,13 @@ def vec_add(vec1, vec2):
     vec3=vec(vec3mag,radian_to_degrees(vec3angle))
     return vec3
 
-def TWD(heading,twa):
-    twd = heading + twa
-    if twd >= 360:
-        twd= twd-360
-    return twd
+def TD(heading,angle): #TRUE DIRECTION
+    td = heading + angle
+    if td >= 360:
+        td= td-360
+    if td < 0:
+        td= td+360    
+    return td
     
 
 

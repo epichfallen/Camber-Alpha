@@ -24,6 +24,8 @@ heel = None #5
 ptch = None #6
 dpth = None #7
 hdg  = None #8
+drfta = None
+drfts = None
 lat  = None
 lon  = None
 lat_dir = 'N'
@@ -108,7 +110,9 @@ while True:
                 awa = msg.deg_r 
                 l_r = msg.l_r
                 print("AWA:" ,awa, l_r)
-
+                if hdg is not None:
+                    awd  = TD(hdg,awa_convert(awa,l_r))
+                    print("AWD:",awd)
                 if awa != None: #publish to mqtt if not None
                     connection.publish("wind/awa",awa)
             except:
@@ -156,33 +160,40 @@ while True:
             
 
             try:
-                awa = msg.deg_r 
+                awa = msg.deg_r #Checking if awa and aws available, it is required for calculations below. Else skip.
                 aws = msg.wind_speed_kn
                 if awa is not None and aws is not None and cog is not None and sog is not None:
-                    aw = vec(aws,awa_convert(awa,l_r)) #construct apparent wind vector   
+                    #Calculating gws,gwa,gwd using gps data and apparent wind.
+                    aw = vec(aws,awa_convert(awa,l_r))   
                     csog = vec(sog,180)
-                    tw = vec_add(aw,csog)
+                    gw = vec_add(aw,csog)
+                    gws  = round(gw.mag,1)
+                    gwa  = round(gw.angle,1)
+                    print("GWS:", gws)
+                    print("GWA:", gwa)
+
+                    if hdg is not None:
+                        gwd  = TD(hdg,gw.angle)
+                        print("GWD:", round(gwd,1))
+
+
+                if awa is not None and aws is not None and bs is not None:
+                    #Calculating twa and twd when there is no gps available, using boat speed and heading.
+                    aw = vec(aws,awa_convert(awa,l_r))
+                    bhed = vec(float(bs), 180)
+                    tw = vec_add(aw,bhed)
                     tws  = round(tw.mag,1)
                     twa  = round(tw.angle,1)
-                    twd  = TWD(hdg,tw.angle)
                     print("TWS:", tws)
                     print("TWA:", twa)
-                    print("TWD:", round(twd,1))
 
+                    if hdg is not None:
+                        twd  = TD(hdg,tw.angle)
+                        print("TWD:", round(twd,1))
 
-                elif awa is not None and aws is not None and bs is not None and hdg is not None and cog is None:
-                    aw = vec(aws,awa) #construct apparent wind vector   
-                    bhed = vec(float(bs), float(hdg)) 
-                    tw = vec_add(aw,bhed)    
-                    tws  = round(tw.mag,1)
-                    twa  = round(tw.angle,1)
-                    twd  = round(boat_to_compass(hdg,tw.angle),1)
-                    print("TWS:", tws) 
-                    print("TWA:", twa)
-                    print("TWD:", twd)
                     
             except Exception as e:
-                print(e)
+                # print(e)
                 pass        
 
            
