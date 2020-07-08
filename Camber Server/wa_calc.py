@@ -18,9 +18,6 @@ def awa_convert(awa,l_r):
     return awa
 
 
-
-
-
 def degrees_to_radian(angle_deg):
     return angle_deg*(math.pi/180)
         
@@ -55,7 +52,10 @@ def TD(heading,angle): #TRUE DIRECTION
         td= td+360    
     return td
     
-
+def VMG(twa,bs):
+    vmg = math.cos(degrees_to_radian(twa))*bs
+    return abs(vmg)
+    
 
 
 #boat_to_compass takes degrees not radian and converts it to compass bearing,note that twa is taken inverted as not where it

@@ -24,6 +24,7 @@ heel = None #5
 ptch = None #6
 dpth = None #7
 hdg  = None #8
+vmg  = None
 drfta = None
 drfts = None
 lat  = None
@@ -147,7 +148,7 @@ while True:
                 pass
 
             try: #GET BOAT SPEED DATA
-                bs = msg.water_speed_knots
+                bs = float(msg.water_speed_knots)
                 print("BS:" , bs)
             except:
                 pass
@@ -180,23 +181,25 @@ while True:
                 if awa is not None and aws is not None and bs is not None:
                     #Calculating twa and twd when there is no gps available, using boat speed and heading.
                     aw = vec(aws,awa_convert(awa,l_r))
-                    bhed = vec(float(bs), 180)
+                    bhed = vec(bs, 180)
                     tw = vec_add(aw,bhed)
                     tws  = round(tw.mag,1)
                     twa  = round(tw.angle,1)
+                    vmg  = round(VMG(tw.angle,bs),1)
+                    print("VMG:", vmg)
                     print("TWS:", tws)
                     print("TWA:", twa)
-
+                    
                     if hdg is not None:
                         twd  = TD(hdg,tw.angle)
                         print("TWD:", round(twd,1))
 
                     
             except Exception as e:
-                # print(e)
+                print(e)
                 pass        
 
-           
+                
             
             print("========")
 
@@ -215,4 +218,46 @@ while True:
         except pynmea2.ParseError as e:
             # print('Parse error: {}'.format(e))
             continue
+
+    #Send all data to mqtt
+    #==================
+    #WIND
+    connection.send_mqtt("wind/aws",aws) 
+    connection.send_mqtt("wind/awa",awa) 
+    connection.send_mqtt("wind/awd",awd)
+
+    connection.send_mqtt("wind/tws",tws) 
+    connection.send_mqtt("wind/twa",twa) 
+    connection.send_mqtt("wind/twd",twd)
+
+    connection.send_mqtt("wind/gws",gws) 
+    connection.send_mqtt("wind/gwa",gwa) 
+    connection.send_mqtt("wind/gwd",gwd) 
+
+    #BOAT
+    connection.send_mqtt("boat/stw",stw) 
+    connection.send_mqtt("boat/hdg",hdg) 
+    
+    # connection.send_mqtt("boat/crs",crs)    
+    # connection.send_mqtt("boat/lwy",lwy) 
+    # connection.send_mqtt("boat/drs",drs) 
+    # connection.send_mqtt("boat/dra",dra) 
+    # connection.send_mqtt("boat/drd",drd) 
+    # connection.send_mqtt("boat/heel",heel) 
+    # connection.send_mqtt("boat/ptch",ptch) 
+
+    connection.send_mqtt("boat/sog",sog) 
+    connection.send_mqtt("boat/cog",cog) 
+    connection.send_mqtt("boat/vmg",vmg) 
+
+    #COURSE
+    # connection.send_mqtt("course/vmc",vmc) 
+    # connection.send_mqtt("course/atw",atw) 
+    # connection.send_mqtt("course/eta",eta)
+    
+    #RACE
+    # connection.send_mqtt("race/dtl",dtl) 
+    # connection.send_mqtt("race/das",das) 
+    # connection.send_mqtt("race/ttl",ttl) 
+    # connection.send_mqtt("race/tts",tts) 
 
