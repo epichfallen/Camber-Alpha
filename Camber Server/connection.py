@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import sqlite3
 
-localserver = "192.168.1.150"
+localserver = "192.168.1.26"
 
 class serverconfig: #create class for server config data
     def __init__(self,input):
@@ -89,5 +89,5 @@ def publish(t,d):
 
 def send_mqtt(channel,payload):
     if payload != None:
-        connection.publish(channel,payload)
+        client.publish(channel,payload)
     
